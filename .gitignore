@@ -7,3 +7,6 @@
 /captures
 .idea
 *.iml
+build
+.classpath
+.project
