@@ -6,6 +6,13 @@ repositories {
     }
 }
 
+if(project.hasProperty("moxtra.signing")
+        && new File(project.property("moxtra.signing") + ".gradle").exists()) {
+    apply from: project.property("moxtra.signing") + ".gradle";
+} else {
+    println("No signing config found. You may not able to build the release apk.")
+}
+
 android {
     compileSdkVersion 22
     buildToolsVersion "23"
@@ -21,7 +28,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
