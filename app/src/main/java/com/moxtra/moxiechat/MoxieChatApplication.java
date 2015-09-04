@@ -1,6 +1,10 @@
 package com.moxtra.moxiechat;
 
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
+
+import com.moxtra.sdk.MXAccountManager;
+import com.moxtra.sdk.MXSDKException;
 
 /**
  * Created by brad on 5/14/15.
@@ -12,5 +16,10 @@ public class MoxieChatApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        try {
+            MXAccountManager.createInstance(this);
+        } catch (MXSDKException.InvalidParameter invalidParameter) {
+            Log.e(TAG, "Error when creating MXAccountManager instance.", invalidParameter);
+        }
     }
 }
