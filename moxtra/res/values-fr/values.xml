@@ -1098,11 +1098,14 @@
     <string name="joined_this_group_">"a intégré ce groupe."</string>
     <string name="left_this_binder">"a quitté ce classeur."</string>
     <string name="left_this_chat">"a quitté cette conversation."</string>
+    <string name="meet_reclaim_host_failed">"Impossible de récupérer l'hôte. Veuillez réessayer."</string>
+    <string name="meet_reclaim_host_success">"Hôte récupéré."</string>
     <string name="mins">"min"</string>
     <string name="moved_a_file_">"a déplacé un fichier \"%1$s\"."</string>
     <string name="moved_a_file_to">"a déplacé un fichier \"%1$s\" vers \"%2$s\""</string>
     <string name="please_add_ics_to_calendar">"Ajoutez cette réunion à votre calendrier en ajoutant le fichier iCalendar ci-joint (.ics) à votre calendrier."</string>
     <string name="please_remove_ics_from_calendar">"Supprimez cette réunion de votre calendrier en ajoutant le fichier ci-joint iCalendar (.ics) à votre calendrier."</string>
+    <string name="reclaim_host">"Récupérer l'hôte"</string>
     <string name="recorded_a_video">"a enregistré une vidéo"</string>
     <string name="recorded_a_video_">"a enregistré une vidéo."</string>
     <string name="recorded_a_video_clip">"a enregistré un clip vidéo."</string>

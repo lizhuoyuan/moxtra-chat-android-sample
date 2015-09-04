@@ -1125,6 +1125,8 @@
     <string name="left_this_chat">"離開聊天。"</string>
     <string name="left_this_group">"離開了這個組"</string>
     <string name="left_this_group_">"離開了這個組。"</string>
+    <string name="meet_reclaim_host_failed">"未能收回主持權，請重試。"</string>
+    <string name="meet_reclaim_host_success">"主持權已收回。"</string>
     <string name="min">"分鐘"</string>
     <string name="mins">"分鐘"</string>
     <string name="moved_a_file">"移動一個文件。"</string>
@@ -1132,6 +1134,7 @@
     <string name="moved_a_file_to">"移到了該文件 \"%1$s\" 到 \"%2$s\""</string>
     <string name="please_add_ics_to_calendar">"Add this meeting to your calendar by adding the attached iCalendar (.ics) file to your calendar."</string>
     <string name="please_remove_ics_from_calendar">"通過添加附加的iCalendar (.ics)文件到你的日曆可從你的日曆刪除該會議。"</string>
+    <string name="reclaim_host">"收回主持權"</string>
     <string name="recorded_a_video">"錄製視頻"</string>
     <string name="recorded_a_video_">"錄製視頻。"</string>
     <string name="recorded_a_video_clip">"錄製一個視頻。"</string>

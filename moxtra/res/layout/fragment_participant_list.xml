@@ -23,33 +23,28 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/btn_reclaim_host"
+            style="@style/MoxFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            android:text="@string/reclaim_host" />
+
         <Space
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
 
-        <ViewSwitcher
+        <Button
+            android:id="@+id/btn_mute_all"
+            style="@style/MoxFlatButton"
             android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginRight="10dp"
-            android:measureAllChildren="false"
-            android:id="@+id/view_switcher"
-            android:layout_height="wrap_content">
+            android:visibility="gone"
+            android:text="@string/Mute_All" />
 
-            <Button
-                android:id="@+id/btn_mute_all"
-                style="@style/MoxFlatButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/Mute_All" />
-
-            <Button
-                android:id="@+id/btn_reclaim_host"
-                style="@style/MoxFlatButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:text="@string/reclaim_host" />
-
-        </ViewSwitcher>
     </LinearLayout>
 </LinearLayout><!-- From: file:/var/lib/jenkins/jobs/Build_2.9.2_Based_Chat_SDK/workspace/android/branches/2.9.2/resources/res/layout/fragment_participant_list.xml -->

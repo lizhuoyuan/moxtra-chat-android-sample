@@ -1114,11 +1114,14 @@
     <string name="left_this_chat">"saiu desta conversa."</string>
     <string name="left_this_group">"saiu deste grupo"</string>
     <string name="left_this_group_">"saiu deste grupo."</string>
+    <string name="meet_reclaim_host_failed">"Não é possível reivindicar a apresentação. Tente outra vez."</string>
+    <string name="meet_reclaim_host_success">"Apresentação reivindicada."</string>
     <string name="mins">"min"</string>
     <string name="moved_a_file_">"moveu um arquivo \"%1$s\"."</string>
     <string name="moved_a_file_to">"moveu um arquivo \"%1$s\" para \"%2$s\""</string>
     <string name="please_add_ics_to_calendar">"Adicione esta reunião ao seu calendário, adicionando o arquivo iCalendar anexo (.ics) ao seu calendário."</string>
     <string name="please_remove_ics_from_calendar">"Remova esta reunião do seu calendário, adicionando o arquivo iCalendar anexo (.ics) ao seu calendário."</string>
+    <string name="reclaim_host">"Reivindicar Apresentação"</string>
     <string name="recorded_a_video">"gravou um vídeo"</string>
     <string name="recorded_a_video_">"gravou um vídeo."</string>
     <string name="recorded_a_video_clip">"gravou um videoclipe."</string>

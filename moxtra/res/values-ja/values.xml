@@ -1117,12 +1117,15 @@
     <string name="left_this_chat">"このチャットを去りました"</string>
     <string name="left_this_group">"このグループから退出済み"</string>
     <string name="left_this_group_">"このグループから退出済み。"</string>
+    <string name="meet_reclaim_host_failed">"ホストを再要求できません。再度お試しください。"</string>
+    <string name="meet_reclaim_host_success">"ホストが再要求されました。"</string>
     <string name="min">"分"</string>
     <string name="mins">"分"</string>
     <string name="moved_a_file_">"ファイル \"%1$s\" を移動しました."</string>
     <string name="moved_a_file_to">"ファイル \"%1$s\" を \"%2$s\"へ移動しました"</string>
     <string name="please_add_ics_to_calendar">"添付のiCalendar (.ics) ファイルをあなたのカレンダーに追加することで、このミーティングをカレンダーに追加します。"</string>
     <string name="please_remove_ics_from_calendar">"添付のiCalendar (.ics) ファイルをあなたのカレンダーに追加することで、このミーティングをカレンダーから削除します。"</string>
+    <string name="reclaim_host">"ホストを再要求する"</string>
     <string name="recorded_a_video">"録画された動画"</string>
     <string name="recorded_a_video_">"録画された動画。"</string>
     <string name="recorded_a_video_clip">"ビデオクリップを録画しました。"</string>

@@ -1079,11 +1079,14 @@
     <string name="joined_this_group_">"se ha unido a este grupo."</string>
     <string name="left_this_binder">"ha abandonado esta carpeta."</string>
     <string name="left_this_chat">"ha abandonado este chat."</string>
+    <string name="meet_reclaim_host_failed">"Error al solicitar la organización. Inténtalo de nuevo."</string>
+    <string name="meet_reclaim_host_success">"Organización solicitada."</string>
     <string name="mins">"min"</string>
     <string name="moved_a_file_">"ha movido el archivo \"%1$s\"."</string>
     <string name="moved_a_file_to">"ha movido el archivo \"%1$s\" a \"%2$s\""</string>
     <string name="please_add_ics_to_calendar">"Agregue este encuentro a su calendario agregando el archivo iCalendar (.ics) adjunto a su calendario."</string>
     <string name="please_remove_ics_from_calendar">"Elimine este encuentro de su calendario agregando el archivo iCalendar (.ics) adjunto a su calendario."</string>
+    <string name="reclaim_host">"Solicitar organización"</string>
     <string name="recorded_a_video">"ha grabado un vídeo"</string>
     <string name="recorded_a_video_">"ha grabado un vídeo."</string>
     <string name="recorded_a_video_clip">"ha grabado un clip de vídeo."</string>
