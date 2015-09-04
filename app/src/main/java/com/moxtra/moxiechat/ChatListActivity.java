@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by blade on 5/13/15.
  */
-public class ChatListActivity extends BaseActivity implements View.OnClickListener, MXChatManager.OnCreateChatListener {
+public class ChatListActivity extends BaseActivity implements View.OnClickListener, MXChatManager.OnCreateChatListener, MXChatManager.OnOpenChatListener {
 
     private static final String TAG = "ChatList";
 
@@ -161,6 +161,17 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
         Toast.makeText(this, "Failed to create chat: " + s, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onOpenChatSuccess() {
+        Log.i(TAG, "Open chat success.");
+    }
+
+    @Override
+    public void onOpenChatFailed(int i, String s) {
+        Log.e(TAG, "Failed to open chat with code: " + i + ", msg: " + s);
+        Toast.makeText(this, "Failed to open chat: " + s, Toast.LENGTH_LONG).show();
+    }
+
     public class ChatListAdapter extends RecyclerView.Adapter {
 
         List<MXGroupChatSession> sessions;
@@ -182,6 +193,18 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
                 tvBadge = (TextView) itemView.findViewById(R.id.tv_badge);
                 btnDelete = (Button) itemView.findViewById(R.id.btn_delete);
                 btnMeet = (Button) itemView.findViewById(R.id.btn_meet);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (session.isAChat()) {
+                            try {
+                                MXChatManager.getInstance().openChat(session.getSessionID(), ChatListActivity.this);
+                            } catch (MXException.AccountManagerIsNotValid accountManagerIsNotValid) {
+                                Log.e(TAG, "Error when open chat", accountManagerIsNotValid);
+                            }
+                        }
+                    }
+                });
                 btnDelete.setOnClickListener(this);
                 btnMeet.setOnClickListener(this);
             }
