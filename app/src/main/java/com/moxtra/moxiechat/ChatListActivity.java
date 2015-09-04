@@ -13,13 +13,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.melnykov.fab.FloatingActionButton;
 import com.moxtra.binder.sdk.InviteToChatCallback;
 import com.moxtra.moxiechat.common.CircleTransform;
 import com.moxtra.moxiechat.common.PreferenceUtil;
 import com.moxtra.moxiechat.model.DummyData;
 import com.moxtra.moxiechat.model.User;
 import com.moxtra.sdk.MXChatManager;
+import com.moxtra.sdk.MXException;
 import com.moxtra.sdk.MXGroupChatMember;
 import com.moxtra.sdk.MXGroupChatSession;
 import com.moxtra.sdk.MXGroupChatSessionCallback;
@@ -27,6 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,10 +39,11 @@ import java.util.List;
 /**
  * Created by blade on 5/13/15.
  */
-public class ChatListActivity extends BaseActivity implements View.OnClickListener {
+public class ChatListActivity extends BaseActivity implements View.OnClickListener, MXChatManager.OnCreateChatListener {
 
     private static final String TAG = "ChatList";
 
+    private FloatingActionButton fab;
     private RecyclerView chatListRecyclerView;
     private ChatListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -54,6 +60,9 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
         currentLoginUser = PreferenceUtil.getUser(this);
 
         setContentView(R.layout.activity_chat_list);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
 
         chatListRecyclerView = (RecyclerView) findViewById(R.id.rv_chat_list);
         chatListRecyclerView.setHasFixedSize(true);
@@ -105,6 +114,25 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.fab) {
+            new MaterialDialog.Builder(this)
+                    .title(R.string.selectUserTitle)
+                    .items(getUserList())
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+                            selectedUser = userLisToSelect.get(i);
+                            Log.d(TAG, "Selected user: " + selectedUser.firstName);
+                            String topic = getTopic();
+                            try {
+                                MXChatManager.getInstance().createChat(topic, Arrays.asList(new String[]{selectedUser.email}), ChatListActivity.this);
+                            } catch (MXException.AccountManagerIsNotValid accountManagerIsNotValid) {
+                                Log.e(TAG, "Error when create chat", accountManagerIsNotValid);
+                            }
+                        }
+                    })
+                    .show();
+        }
     }
 
     private String getTopic() {
@@ -120,6 +148,17 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
         String[] userNames = new String[users.size()];
         users.toArray(userNames);
         return userNames;
+    }
+
+    @Override
+    public void onCreateChatSuccess(String binderId) {
+        Log.i(TAG, "Create Chat Success. The binderId = " + binderId);
+    }
+
+    @Override
+    public void onCreateChatFailed(int i, String s) {
+        Log.e(TAG, "Failed to create chat with code: " + i + ", msg: " + s);
+        Toast.makeText(this, "Failed to create chat: " + s, Toast.LENGTH_LONG).show();
     }
 
     public class ChatListAdapter extends RecyclerView.Adapter {
