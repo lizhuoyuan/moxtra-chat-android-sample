@@ -5,15 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.moxtra.moxiechat.common.PreferenceUtil;
+import com.moxtra.sdk.MXAccountManager;
+import com.moxtra.sdk.MXSDKConfig;
 
 /**
  * Created by blade on 3/26/15.
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends ActionBarActivity implements MXAccountManager.MXAccountUnlinkListener {
 
     private static final String TAG = "BaseActivity";
     protected MenuItem miActionProgressItem;
@@ -72,9 +76,27 @@ public class BaseActivity extends ActionBarActivity {
 
     protected void logout() {
         PreferenceUtil.removeUser(this);
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+        miActionProgressItem.setVisible(true);
+        boolean ret = MXAccountManager.getInstance().unlinkAccount(this);
+        if (!ret) {
+            miActionProgressItem.setVisible(false);
+            Log.e(TAG, "Can't logout: the unlinkAccount return false.");
+            Toast.makeText(this, "unlink failed.", Toast.LENGTH_LONG).show();
+        }
     }
 
+    @Override
+    public void onUnlinkAccountDone(MXSDKConfig.MXUserInfo mxUserInfo) {
+        miActionProgressItem.setVisible(false);
+        Log.i(TAG, "Unlinked moxtra account: " + mxUserInfo);
+        if (mxUserInfo == null) {
+            Log.e(TAG, "Can't logout: the mxUserInfo is null.");
+            Toast.makeText(this, "unlink failed as mxUserInfo is null.", Toast.LENGTH_LONG).show();
+        } else {
+            Log.i(TAG, "User " + mxUserInfo.userIdentity + " logout OK.");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 }

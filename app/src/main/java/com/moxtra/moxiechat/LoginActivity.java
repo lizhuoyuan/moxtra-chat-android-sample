@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,19 +20,24 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.moxtra.moxiechat.common.PreferenceUtil;
 import com.moxtra.moxiechat.model.DummyData;
 import com.moxtra.moxiechat.model.User;
+import com.moxtra.sdk.MXAccountManager;
+import com.moxtra.sdk.MXSDKConfig;
+import com.moxtra.sdk.MXSDKException;
 
+import java.io.IOException;
 import java.util.List;
 
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements MXAccountManager.MXAccountLinkListener {
 
     private static final String TAG = "LoginActivity";
     /**
@@ -48,13 +55,13 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_login);
-        mProgressView = findViewById(R.id.login_progress);
-
         if (PreferenceUtil.getUser(this) != null) {
             setupMoxtraUser();
             return;
         }
+
+        setContentView(R.layout.activity_login);
+        mProgressView = findViewById(R.id.login_progress);
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -84,6 +91,10 @@ public class LoginActivity extends Activity {
 
         mLoginFormView = findViewById(R.id.login_form);
 
+        showSelectionDialog();
+    }
+
+    private void showSelectionDialog() {
         new MaterialDialog.Builder(this)
                 .title(R.string.selectUserTitle)
                 .items(DummyData.EMAILS.toArray(new String[DummyData.EMAILS.size()]))
@@ -103,6 +114,21 @@ public class LoginActivity extends Activity {
     }
 
     private void setupMoxtraUser() {
+        if (MXAccountManager.getInstance().isLinked()) {
+            Log.i(TAG, "Moxtra user is already linked.");
+            startChatListActivity();
+        } else {
+            Log.i(TAG, "Moxtra user is not linked yet.");
+            try {
+                User user = PreferenceUtil.getUser(this);
+                Bitmap avatar = BitmapFactory.decodeStream(this.getAssets().open(user.avatarPath));
+                final MXSDKConfig.MXUserInfo mxUserInfo = new MXSDKConfig.MXUserInfo(user.email, MXSDKConfig.MXUserIdentityType.IdentityUniqueId);
+                final MXSDKConfig.MXProfileInfo mxProfileInfo = new MXSDKConfig.MXProfileInfo(user.firstName, user.lastName, avatar);
+                MXAccountManager.getInstance().setupUser(mxUserInfo, mxProfileInfo, null, null, LoginActivity.this);
+            } catch (IOException e) {
+                Log.e(TAG, "Can't decode avatar.", e);
+            }
+        }
     }
 
     /**
@@ -210,6 +236,18 @@ public class LoginActivity extends Activity {
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onLinkAccountDone(boolean success) {
+        if (success) {
+            Log.i(TAG, "Linked to moxtra account successfully.");
+            startChatListActivity();
+        } else {
+            Toast.makeText(this, "Failed to setup moxtra user.", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Failed to setup moxtra user.");
+            showProgress(false);
+        }
     }
 
     /**
