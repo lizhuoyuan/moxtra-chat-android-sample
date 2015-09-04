@@ -36,7 +36,7 @@ public class BaseActivity extends ActionBarActivity implements MXAccountManager.
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        //searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, ConferenceListActivity.class)));
+        //searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, ChatListActivity.class)));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
         return super.onPrepareOptionsMenu(menu);
