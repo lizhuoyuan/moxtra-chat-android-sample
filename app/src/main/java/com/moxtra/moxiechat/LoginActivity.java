@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -111,6 +112,8 @@ public class LoginActivity extends Activity implements MXAccountManager.MXAccoun
 
     private void startChatListActivity() {
         Log.i(TAG, "startChatListActivity");
+        startActivity(new Intent(this, ChatListActivity.class));
+        finish();
     }
 
     private void setupMoxtraUser() {

@@ -37,6 +37,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ChatListActivity"/>
         <activity android:name=".SettingsActivity"/>
 
         <!-- Activities used in Moxtra Chat SDK -->
