@@ -1,0 +1,38 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/search"
+        android:icon="@drawable/ic_action_search"
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item
+        android:id="@+id/action_sort"
+        android:title="@string/action_sort"
+        android:icon="@drawable/ic_fa_sort"
+        android:visible="false"
+        android:orderInCategory="20"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/miActionProgress"
+        android:title="@string/loading"
+        android:visible="false"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/action_view_progressbar" />
+    <item
+        android:id="@+id/action_logout"
+        android:title="@string/action_logout"
+        android:icon="@drawable/ic_fa_sign_out"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+</menu>

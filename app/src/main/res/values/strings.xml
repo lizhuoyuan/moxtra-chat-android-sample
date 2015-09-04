@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Moxie Chat</string>
+    <string name="search">Search</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_settings">Settings</string>
+    <string name="loading">Loading</string>
+    <string name="action_logout">Logout</string>
+    <string name="selectUserTitle">Select User</string>
+    <string name="Delete">Delete</string>
+    <string name="delete_confirm">Are you sure to delete the chat?</string>
+    <string name="delete_confirm_title">Delete Chat</string>
 </resources>
