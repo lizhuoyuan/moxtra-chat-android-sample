@@ -247,6 +247,28 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
                             }
                         });
                     }
+                } else if (v.getId() == R.id.btn_delete) {
+                    new MaterialDialog.Builder(ChatListActivity.this)
+                            .title(R.string.delete_confirm_title)
+                            .content(R.string.delete_confirm)
+                            .positiveText(android.R.string.yes)
+                            .positiveColorRes(R.color.red_800)
+                            .negativeColorRes(R.color.black)
+                            .negativeText(android.R.string.no)
+                            .callback(new MaterialDialog.ButtonCallback() {
+                                @Override
+                                public void onPositive(MaterialDialog dialog) {
+                                    super.onPositive(dialog);
+                                    MXChatManager.getInstance().deleteChat(session.getSessionID());
+                                    refreshData();
+                                }
+
+                                @Override
+                                public void onNegative(MaterialDialog dialog) {
+                                    super.onNegative(dialog);
+                                }
+                            })
+                            .show();
                 }
             }
 
