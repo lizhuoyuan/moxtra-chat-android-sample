@@ -203,6 +203,8 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
                             } catch (MXException.AccountManagerIsNotValid accountManagerIsNotValid) {
                                 Log.e(TAG, "Error when open chat", accountManagerIsNotValid);
                             }
+                        } else if (session.isAMeet()) {
+                            joinMeet();
                         }
                     }
                 });
@@ -214,7 +216,7 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
             public void onClick(View v) {
                 if (v.getId() == R.id.btn_meet) {
                     if (session.isAMeet()) {
-                        // joinMeet
+                        joinMeet();
                     } else {
                         MXChatManager.getInstance().getChatMembers(session.getSessionID(), new MXChatManager.OnGetChatMembersListener() {
                             @Override
@@ -244,6 +246,27 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
                                 Log.e(TAG, "onGetMembersFailed: " + s);
                             }
                         });
+                    }
+                }
+            }
+
+            private void joinMeet() {
+                if (!MXChatManager.getInstance().isAMeetingInProgress()) {
+                    try {
+                        MXChatManager.getInstance().joinMeet(session.getMeetID(), currentLoginUser.firstName,
+                                new MXChatManager.OnJoinMeetListener() {
+                                    @Override
+                                    public void onJoinMeetDone(String meetId, String meetUrl) {
+                                        Log.d(TAG, "Joined meet: " + meetId);
+                                    }
+
+                                    @Override
+                                    public void onJoinMeetFailed() {
+                                        Log.e(TAG, "Unable to join meet.");
+                                    }
+                                });
+                    } catch (MXSDKException.MeetIsInProgress meetIsInProgress) {
+                        Log.e(TAG, "Error when join meet", meetIsInProgress);
                     }
                 }
             }
