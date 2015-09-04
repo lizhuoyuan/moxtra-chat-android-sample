@@ -27,6 +27,7 @@ import com.moxtra.sdk.MXException;
 import com.moxtra.sdk.MXGroupChatMember;
 import com.moxtra.sdk.MXGroupChatSession;
 import com.moxtra.sdk.MXGroupChatSessionCallback;
+import com.moxtra.sdk.MXSDKException;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -211,6 +212,40 @@ public class ChatListActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onClick(View v) {
+                if (v.getId() == R.id.btn_meet) {
+                    if (session.isAMeet()) {
+                        // joinMeet
+                    } else {
+                        MXChatManager.getInstance().getChatMembers(session.getSessionID(), new MXChatManager.OnGetChatMembersListener() {
+                            @Override
+                            public void onGetChatMembersDone(ArrayList<String> arrayList) {
+                                try {
+                                    MXChatManager.getInstance().startMeet(currentLoginUser.firstName + "'s meet", null,
+                                            arrayList, new MXChatManager.OnStartMeetListener() {
+                                                @Override
+                                                public void onStartMeetDone(String meetId, String meetUrl) {
+                                                    Log.d(TAG, "Meet started: " + meetId);
+                                                }
+
+                                                @Override
+                                                public void onStartMeetFailed(int i, String s) {
+                                                    Log.e(TAG, "onStartMeetFailed: " + s);
+                                                }
+                                            });
+                                } catch (MXSDKException.Unauthorized unauthorized) {
+                                    Log.e(TAG, "Error when start meet", unauthorized);
+                                } catch (MXSDKException.MeetIsInProgress meetIsInProgress) {
+                                    Log.e(TAG, "Error when start meet", meetIsInProgress);
+                                }
+                            }
+
+                            @Override
+                            public void onGetChatMembersFailed(int i, String s) {
+                                Log.e(TAG, "onGetMembersFailed: " + s);
+                            }
+                        });
+                    }
+                }
             }
 
         }
