@@ -88,6 +88,16 @@
         <activity android:name="com.moxtra.binder.webclip.MXWebClipActivity"/>
         <activity android:name="com.moxtra.binder.livemeet.MeetRingActivity"/>
         <!-- END Moxtra -->
+
+        <receiver
+            android:name=".GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.coderhour.ptc" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GcmIntentService" />
     </application>
 
 </manifest>

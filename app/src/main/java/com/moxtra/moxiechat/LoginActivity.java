@@ -4,7 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -27,6 +30,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.moxtra.moxiechat.common.PreferenceUtil;
 import com.moxtra.moxiechat.model.DummyData;
 import com.moxtra.moxiechat.model.User;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.moxtra.sdk.MXAccountManager;
 import com.moxtra.sdk.MXSDKConfig;
 import com.moxtra.sdk.MXSDKException;
@@ -51,6 +55,9 @@ public class LoginActivity extends Activity implements MXAccountManager.MXAccoun
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private String SENDER_ID = "3367684136";
+    private GoogleCloudMessaging gcm;
+    private String regid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,14 +129,20 @@ public class LoginActivity extends Activity implements MXAccountManager.MXAccoun
             startChatListActivity();
         } else {
             Log.i(TAG, "Moxtra user is not linked yet.");
-            try {
-                User user = PreferenceUtil.getUser(this);
-                Bitmap avatar = BitmapFactory.decodeStream(this.getAssets().open(user.avatarPath));
-                final MXSDKConfig.MXUserInfo mxUserInfo = new MXSDKConfig.MXUserInfo(user.email, MXSDKConfig.MXUserIdentityType.IdentityUniqueId);
-                final MXSDKConfig.MXProfileInfo mxProfileInfo = new MXSDKConfig.MXProfileInfo(user.firstName, user.lastName, avatar);
-                MXAccountManager.getInstance().setupUser(mxUserInfo, mxProfileInfo, null, null, LoginActivity.this);
-            } catch (IOException e) {
-                Log.e(TAG, "Can't decode avatar.", e);
+            regid = getRegistrationId(this);
+            if (TextUtils.isEmpty(regid)) {
+                Log.i(TAG, "Register in background.");
+                registerInBackground();
+            } else {
+                try {
+                    User user = PreferenceUtil.getUser(this);
+                    Bitmap avatar = BitmapFactory.decodeStream(this.getAssets().open(user.avatarPath));
+                    final MXSDKConfig.MXUserInfo mxUserInfo = new MXSDKConfig.MXUserInfo(user.email, MXSDKConfig.MXUserIdentityType.IdentityUniqueId);
+                    final MXSDKConfig.MXProfileInfo mxProfileInfo = new MXSDKConfig.MXProfileInfo(user.firstName, user.lastName, avatar);
+                    MXAccountManager.getInstance().setupUser(mxUserInfo, mxProfileInfo, null, regid, this);
+                } catch (IOException e) {
+                    Log.e(TAG, "Can't decode avatar.", e);
+                }
             }
         }
     }
@@ -306,5 +319,96 @@ public class LoginActivity extends Activity implements MXAccountManager.MXAccoun
         }
     }
 
+    private String getRegistrationId(Context context) {
+        String registrationId = PreferenceUtil.getGcmRegId(context);
+        if (TextUtils.isEmpty(registrationId)) {
+            Log.i(TAG, "Registration not found.");
+            return "";
+        }
+        // Check if app was updated; if so, it must clear the registration ID
+        // since the existing regID is not guaranteed to work with the new
+        // app version.
+        int registeredVersion = PreferenceUtil.getAppVersion(this);
+        int currentVersion = getAppVersion(context);
+        if (registeredVersion != currentVersion) {
+            Log.i(TAG, "App version changed.");
+            return "";
+        }
+        return registrationId;
+    }
+
+    /**
+     * @return Application's version code from the {@code PackageManager}.
+     */
+    private static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
+    /**
+     * Registers the application with GCM servers asynchronously.
+     * <p/>
+     * Stores the registration ID and the app versionCode in the application's
+     * shared preferences.
+     */
+    private void registerInBackground() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                if (mProgressView != null) {
+                    mProgressView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(LoginActivity.this);
+                    }
+                    regid = gcm.register(SENDER_ID);
+                    msg = "Device registered, registration ID=" + regid;
+
+                    // Save the regid in Moxtra so we can get the GCM notification.
+                    try {
+                        User user = PreferenceUtil.getUser(LoginActivity.this);
+                        Bitmap avatar = BitmapFactory.decodeStream(LoginActivity.this.getAssets().open(user.avatarPath));
+                        final MXSDKConfig.MXUserInfo mxUserInfo = new MXSDKConfig.MXUserInfo(user.email, MXSDKConfig.MXUserIdentityType.IdentityUniqueId);
+                        final MXSDKConfig.MXProfileInfo mxProfileInfo = new MXSDKConfig.MXProfileInfo(user.firstName, user.lastName, avatar);
+                        MXAccountManager.getInstance().setupUser(mxUserInfo, mxProfileInfo, null, regid, LoginActivity.this);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Can't decode avatar.", e);
+                    }
+
+                    // Persist the regID - no need to register again.
+                    PreferenceUtil.setGcmRegId(LoginActivity.this, regid);
+                    PreferenceUtil.setAppVersion(LoginActivity.this, getAppVersion(LoginActivity.this));
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+                    Log.e(TAG, "Error when register on GCM.", ex);
+                    // If there is an error, don't just keep trying to register.
+                    // Require the user to click a button again, or perform
+                    // exponential back-off.
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+                if (mProgressView != null) {
+                    mProgressView.setVisibility(View.GONE);
+                }
+                Log.d(TAG, "Reg done: " + msg);
+            }
+        }.execute(null, null, null);
+    }
 }
 
