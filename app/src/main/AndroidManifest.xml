@@ -23,7 +23,22 @@
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <application android:allowBackup="true" android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
+        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme"
+        android:name=".MoxieChatApplication">
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".SettingsActivity"/>
+
         <!-- Activities used in Moxtra Chat SDK -->
         <activity
             android:name="com.moxtra.binder.conversation.MXConversationActivity"

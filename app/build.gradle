@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 android {
     compileSdkVersion 22
     buildToolsVersion "23"
@@ -9,6 +15,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         useJack = rootProject.ext.useJack
+        multiDexEnabled = true
         versionCode 1
         versionName "1.0"
     }
@@ -22,8 +29,14 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.0'
     compile project(':moxtra')
     compile 'org.jsoup:jsoup:1.7.3'
     compile 'com.belerweb:pinyin4j:2.5.0'
+
+    compile(name: 'material-dialogs-0.7.4.2', ext: 'aar')
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.melnykov:floatingactionbutton:1.3.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
